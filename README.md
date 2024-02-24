@@ -66,7 +66,7 @@ https://docs.docker.com/get-docker/
 
     3.1.Adding SWC compiler
 
-        > pnpm add --save-dev @swc/cli @swc/core rimraf
+        > pnpm add --save-dev @swc/cli @swc/core @swc-node/register rimraf
 
     3.2.Defining how to build the project
 
@@ -97,7 +97,7 @@ https://docs.docker.com/get-docker/
         adding start option in script section of package.json
             "scripts": {
                 "build": "rimraf dist && swc ./src -d ./dist",
-                "start": "node dist/index.js"
+                "start": "node -r '@swc-node/register' --watch --enable-source-maps src/index.ts",
             },
 
     3.5.Testing compilation
@@ -181,4 +181,57 @@ https://docs.docker.com/get-docker/
         Adding in script section
         "start:docker": "pnpm build && pnpm start"
 
-    
+6.Restart on Save
+
+    6.1.Get extension for VSCODE triggertaskonsave
+    6.2.Confugiring Task on VScode
+        Create tasks.json file in vscode folder
+        {
+            "version": "2.0.0",
+            "tasks": [
+                {
+                "label": "restart backend",
+                "type": "shell",
+                "command": "docker compose restart backend",
+                "presentation": {
+                    "reveal": "never"
+                }
+                }
+            ]
+        }
+    6.3.Configuring Extension
+        Editing settings.json in the folder vscode
+        "files.watcherExclude": {
+            "**/.git/objects/**": true,
+            "**/.git/subtree-cache/**": true,
+        },
+        "triggerTaskOnSave.tasks": {
+            "restart backend": ["src/**/*"]
+        }
+
+7.Debugging setup
+
+    7.1.Configuring VScode
+        adding launch.json in vscode folder
+        {
+            "version": "0.2.0",
+            "configurations": [
+            {
+                "type": "node",
+                "request": "attach",
+                "name": "Node (Docker)",
+                "port": 9229,
+                "restart": true,
+                "remoteRoot": "/usr/src/app",
+                "sourceMaps": true,
+                "skipFiles": [
+                "/usr/src/app/node_modules/**/*.js",
+                "<node_internals>/**"
+                ]
+            }
+            ]
+        }
+
+    7.2.Catch Docker debugger
+        Editing start docker option in script section of package.json
+        "start:docker": "pnpm build && node --inspect=0.0.0.0 -r '@swc-node/register' --watch --enable-source-maps src/index.ts"

@@ -5,7 +5,7 @@ const app = express();  // Create an Express application
 app.use(morgan('dev')); // Log requests to the console
 
 app.get('/', (req, res) => {
-    res.json('Hello World!');
+    res.json( {Hello: 'World2'});
 })
 
 const port = Number(process.env.PORT || 8080);  // 8080 is the default port if PORT is not set
