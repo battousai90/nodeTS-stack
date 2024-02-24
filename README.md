@@ -56,7 +56,9 @@ https://docs.docker.com/get-docker/
             ]
         }
     2.6.Create src folder
+
     2.7.Create first src file index.ts
+
     2.8.Adding node types for typescript
         > pnpm add --save-dev @types/node
 
@@ -67,11 +69,12 @@ https://docs.docker.com/get-docker/
         > pnpm add --save-dev @swc/cli @swc/core rimraf
 
     3.2.Defining how to build the project
-    
+
         adding build option in script section of package.json
           "scripts": {
                 "build": "rimraf dist && swc ./src -d ./dist",
             },
+
     3.3.Creating  .swcrc compiling profile file
         {
             "env": {
@@ -89,17 +92,93 @@ https://docs.docker.com/get-docker/
             },
             "sourceMaps": "inline"
         }
+
     3.4.Defining how to start project
         adding start option in script section of package.json
             "scripts": {
                 "build": "rimraf dist && swc ./src -d ./dist",
                 "start": "node dist/index.js"
             },
+
     3.5.Testing compilation
         > pnpm build
+
     3.6.Correct start for managed SWC compile with folowing sourcemaps links
         In package.json change the start command
             "start": "node -r '@swc-node/register' --watch --enable-source-maps src/index.ts"
-    3.7.Trat the project
+
+    3.7.Start the project
         > pnpm start
+
+4.ESLint setup
+    4.1.Setup
+    > pnpm add --save-dev eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
+    4.2.Setup
+    Create .eslinrc file with
+    {
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ]
+    }
+
+5.Express Setup
+    5.1.Setup
+    > pnpm add express morgan
+
+    5.2.adding types for typescript
+    > pnpm add --save-dev @types/express @types/morgan
+
+6.Docker Setup
+    5.1.Create dockerfile
+        FROM node:18
+
+        # Install pnpm
+        RUN npm -i -g pnpm
+
+        # Create app directory
+        WORKDIR /usr/src/app
+
+        # Install app dependencies
+        COPY package*.json pnpm-lock.yaml ./
+
+        RUN pnpm install --frozen-lockfile
+
+        # Bundle app source
+        COPY . .
+
+        # Build app
+        EXPOSE 8080
+        CMD [ "pnpm", "start" ]
+
+    5.2.Create dockerignor file
+        .pnpm-store
+        .vscode
+        dist
+        node_modules
+
+    5.3.Create dockercompose.yml file
+        services: 
+        backend: # name of the service
+            build: . # path to the Dockerfile
+            ports:
+            - 5000:5000 # for the app
+            - 9229:9229 # for debugging
+            volumes:
+            - .:/usr/src/app # mount the current directory to /app
+            - /usr/src/app/.pnpm-store # prevent the pnpm-store from being mounted
+            - /usr/src/app/node_modules # prevent the node_modules from being mounted
+            command: pnpm start:docker # start the app in dev mode
+            environment:
+            PORT: 5000
+
+    5.4.Edit package.json for adding start docker command
+        Adding in script section
+        "start:docker": "pnpm build && pnpm start"
+
     

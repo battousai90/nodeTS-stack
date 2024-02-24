@@ -1,0 +1,13 @@
+services: 
+  backend: # name of the service
+    build: . # path to the Dockerfile
+    ports:
+      - 5000:5000 # for the app
+      - 9229:9229 # for debugging
+    volumes:
+      - .:/usr/src/app # mount the current directory to /app
+      - /usr/src/app/.pnpm-store # prevent the pnpm-store from being mounted
+      - /usr/src/app/node_modules # prevent the node_modules from being mounted
+    command: pnpm start:docker # start the app in dev mode
+    environment:
+      PORT: 5000
