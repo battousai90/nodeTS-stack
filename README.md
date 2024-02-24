@@ -24,15 +24,25 @@ And at last Docker
 https://docs.docker.com/get-docker/
 
 2.Initialization
+
     2.1.Generate package.json
+
         > pnpm init
+
     2.2.Choose and define node version
+
         > volta pin node@18
+
     2.3.Adding Typescript dependencie to the project
+
         > pnpm add typescript
+
     2.4.Define base config for typescript
+
         > pnpm add --save-dev @tsconfig/node18
+
     2.5.Create tsconfig.json
+    
         {
             "extends": "@tsconfig/node18/tsconfig.json",
             "compilerOptions": {
