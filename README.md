@@ -42,7 +42,7 @@ https://docs.docker.com/get-docker/
         > pnpm add --save-dev @tsconfig/node18
 
     2.5.Create tsconfig.json
-    
+
         {
             "extends": "@tsconfig/node18/tsconfig.json",
             "compilerOptions": {
@@ -61,9 +61,13 @@ https://docs.docker.com/get-docker/
         > pnpm add --save-dev @types/node
 
 3.Compilation setup
+
     3.1.Adding SWC compiler
+
         > pnpm add --save-dev @swc/cli @swc/core rimraf
+
     3.2.Defining how to build the project
+    
         adding build option in script section of package.json
           "scripts": {
                 "build": "rimraf dist && swc ./src -d ./dist",
