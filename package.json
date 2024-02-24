@@ -1,0 +1,28 @@
+{
+  "name": "nodets-stack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "swc src -d dist",
+    "start": "node -r '@swc-node/register' --watch --enable-source-maps src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "volta": {
+    "node": "18.19.1"
+  },
+  "dependencies": {
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@swc-node/register": "^1.8.0",
+    "@swc/cli": "^0.3.9",
+    "@swc/core": "^1.4.2",
+    "@tsconfig/node18": "^18.2.2",
+    "@types/node": "^20.11.20",
+    "rimraf": "^5.0.5"
+  }
+}
